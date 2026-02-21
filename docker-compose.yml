@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: postgres-ecommerce
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=ecomerce_security_db
+    networks:
+      - spring-demo
+    restart: unless-stopped
+  mail-dev:
+    container_name: mail-dev-bsn
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+#  keycloak:
+#    container_name: keycloak-bsn
+#    image: quay.io/keycloak/keycloak:24.0.2
+#    ports:
+#      - 9090:8080
+#    environment:
+#      KEYCLOAK_ADMIN: admin
+#      KEYCLOAK_ADMIN_PASSWORD: admin
+#    networks:
+#      - spring-demo
+#    command:
+#      - "start-dev"
+networks:
+  spring-demo:
+    driver: bridge
+
+volumes:
+  postgres:
+    driver: local
+  keycloak:
+    driver: local
