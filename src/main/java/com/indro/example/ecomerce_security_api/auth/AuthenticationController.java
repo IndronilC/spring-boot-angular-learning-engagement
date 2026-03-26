@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication")
 public class AuthenticationController {
@@ -24,7 +26,11 @@ public class AuthenticationController {
             @RequestBody @Valid RegistrationRequest request
     ) throws MessagingException {
         service.register(request);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.ok()
+                .body(Map.of(
+                        "status", "SUCCESS",
+                        "message", "Registration successful"
+                ));
     }
 
     @PostMapping("/authenticate")

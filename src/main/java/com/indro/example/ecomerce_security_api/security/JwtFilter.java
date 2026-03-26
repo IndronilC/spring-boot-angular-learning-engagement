@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -28,13 +29,35 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/v1/auth")) {
+        log.info("PATH: {}", request.getServletPath());
+        log.info("FULL URL: {}", request.getRequestURL());
+        log.info("METHOD: {}", request.getMethod());
+
+        // Skip OPTIONS (CORS)
+        if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+            log.info("Skipping OPTIONS request");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // Skip auth endpoints
+        if (request.getServletPath().startsWith("/api/v1/auth")
+                || request.getServletPath().startsWith("/auth")) {
+
+            log.info("Skipping JWT filter for auth endpoint");
             filterChain.doFilter(request, response);
             return;
         }
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+
+
+        // ✅ ADD THIS AT THE VERY TOP
+        if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;

@@ -1,0 +1,15 @@
+.activate-container {
+  @apply min-h-screen flex items-center justify-center bg-gray-100;
+}
+
+.activate-card {
+  @apply bg-white shadow-lg rounded-xl p-10 w-full max-w-md text-center;
+}
+
+.activate-title {
+  @apply text-2xl font-bold text-gray-800 mb-4;
+}
+
+.activate-message {
+  @apply text-gray-600 text-lg;
+}

@@ -1,5 +1,6 @@
 package com.indro.example.ecomerce_security_api.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -13,12 +14,13 @@ import lombok.Setter;
 @Builder
 public class RegistrationRequest {
 
-
+    @JsonProperty("firstName")
     @NotEmpty(message = "Firstname is mandatory")
     @NotNull(message = "Firstname is mandatory")
     private String firstname;
     @NotEmpty(message = "Lastname is mandatory")
     @NotNull(message = "Lastname is mandatory")
+    @JsonProperty("lastName")
     private String lastname;
     @Email(message = "Email is not well formatted")
     @NotEmpty(message = "Email is mandatory")
