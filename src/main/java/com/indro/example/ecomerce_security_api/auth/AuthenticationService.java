@@ -110,11 +110,13 @@ public class AuthenticationService {
     private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
 
+        String activationLink = activationUrl + "?token=" + newToken;
+
         emailService.sendEmail(
                 user.getEmail(),
                 user.getFullName(),
                 EmailTemplateName.ACTIVATE_ACCOUNT,
-                activationUrl,
+                activationLink,
                 newToken,
                 "Account activation"
                 );
