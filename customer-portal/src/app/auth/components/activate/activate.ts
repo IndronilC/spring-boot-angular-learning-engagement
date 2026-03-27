@@ -15,7 +15,8 @@ import { AuthService } from '../../services/auth';
 export class ActivateComponent implements OnInit {
 
   message = '';
- isError = false;
+  isError = false;
+  isSuccess = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +35,7 @@ export class ActivateComponent implements OnInit {
         console.log("✅ API success");
         this.message = 'Account activated successfully!';
         this.isError = false;
+        this.isSuccess = true;
         console.log("isError", this.isError);
         console.log("message", this.message);
       },
@@ -41,7 +43,10 @@ export class ActivateComponent implements OnInit {
         console.log("❌ API error");
          this.message = 'Activation failed.';
          this.isError = true;
-     }
+         this.isSuccess = false;
+         console.log("isError", this.isError);
+         console.log("message", this.message);
+      }
       });
     }
   }

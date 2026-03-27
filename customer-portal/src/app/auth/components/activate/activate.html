@@ -16,7 +16,7 @@
 
     <!-- ✅ Show login button ONLY on success -->
     <button 
-      *ngIf="!isError && message"
+      *ngIf="isSuccess"
       class="login-btn"
       (click)="goToLogin()"
     >

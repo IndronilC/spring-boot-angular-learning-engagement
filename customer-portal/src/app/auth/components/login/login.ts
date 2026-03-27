@@ -27,10 +27,17 @@ export class LoginComponent {
   onSubmit() {
     this.auth.login(this.form).subscribe({
       next: (res) => {
-        this.auth.saveToken(res.accessToken);
+        console.log("Login Response:", res);
+        this.auth.saveToken(res.token);
+        const payload = this.parseJwt(res.token);
+        const username = payload.sub;
+        localStorage.setItem('username', username);
         this.router.navigate(['/dashboard']);
       },
       error: () => this.message = 'Invalid credentials'
     });
+  }
+   parseJwt(token: string): any {
+    return JSON.parse(atob(token.split('.')[1]));
   }
 }
