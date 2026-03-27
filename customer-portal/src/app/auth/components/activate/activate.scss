@@ -13,3 +13,17 @@
 .activate-message {
   @apply text-gray-600 text-lg;
 }
+
+.login-btn {
+  margin-top: 20px;
+  padding: 10px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background-color: #45a049;
+}
