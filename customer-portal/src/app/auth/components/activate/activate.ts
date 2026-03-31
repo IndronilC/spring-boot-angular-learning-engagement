@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-activate',
@@ -21,7 +22,8 @@ export class ActivateComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +40,8 @@ export class ActivateComponent implements OnInit {
         this.isSuccess = true;
         console.log("isError", this.isError);
         console.log("message", this.message);
+        console.log("isSuccess", this.isSuccess)
+        this.cd.detectChanges(); // 👈 THIS FIXES IT
       },
       error: () => {
         console.log("❌ API error");
@@ -51,6 +55,6 @@ export class ActivateComponent implements OnInit {
     }
   }
   goToLogin() {
-  this.router.navigate(['/login']);
+   this.router.navigate(['/login']);
 }
 }

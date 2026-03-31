@@ -7,16 +7,16 @@
     <p 
       class="activate-message"
       [ngClass]="{
-        'text-green-600': !isError && message,
-        'text-red-600': isError
-      }"
+        'text-green-600': isSuccess,
+      'text-red-600': isError
+    }"
     >
       {{ message || 'Activating your account...' }}
     </p>
 
     <!-- ✅ Show login button ONLY on success -->
     <button 
-      *ngIf="isSuccess"
+      *ngIf="true"
       class="login-btn"
       (click)="goToLogin()"
     >
