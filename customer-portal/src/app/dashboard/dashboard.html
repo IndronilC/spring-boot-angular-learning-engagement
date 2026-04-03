@@ -7,6 +7,15 @@
     <div class="card">
       <h3>Profile</h3>
       <p>View your profile details</p>
+      <h2>User Profile</h2>
+
+    <div *ngIf="profileData">
+     <p><strong>Username:</strong> {{ profileData.username }}</p>
+     <p><strong>Email:</strong> {{ profileData.email }}</p>
+      <p><strong>Role:</strong> {{ profileData.role }}</p>
+      <p><strong>FirstName:</strong> {{ profileData.firstName }}</p>
+      <p><strong>lastName:</strong> {{ profileData.lastName }}</p>
+  </div>
       <button (click)="getProfile()" class="btn profile-btn">Get Profile</button>
     </div>
 
