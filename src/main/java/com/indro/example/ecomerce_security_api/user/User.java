@@ -96,6 +96,13 @@ public class User implements UserDetails, Principal {
             orphanRemoval = true
     )
     private List<Token> tokens = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<RefreshToken> refreshTokens = new ArrayList<>();
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles

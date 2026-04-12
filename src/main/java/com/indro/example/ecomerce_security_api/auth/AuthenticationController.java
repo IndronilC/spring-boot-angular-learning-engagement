@@ -1,5 +1,6 @@
 package com.indro.example.ecomerce_security_api.auth;
 
+import com.indro.example.ecomerce_security_api.user.TokenPair;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.mail.*;
@@ -46,5 +47,21 @@ public class AuthenticationController {
         service.activateAccount(token);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthenticationResponse> refresh(
+            @RequestBody RefreshTokenRequest request
+    ) {
+            TokenPair tokenPair = service.refresh(request);
 
-}
+            AuthenticationResponse response = AuthenticationResponse.builder()
+                    .accessToken(tokenPair.getAccessToken())
+                    .refreshToken(tokenPair.getRefreshToken())
+                    .build();
+
+            return ResponseEntity.ok(response);
+        }
+    }
+
+
+
+
