@@ -9,6 +9,8 @@ import { Observable } from 'rxjs';
 export class AuthService {
 
   private api = `${environment.apiUrl}/auth`;
+  private accessTokenKey = 'accessToken';
+  private refreshTokenKey = 'refreshToken';
 
   constructor(private http: HttpClient) {}
 
@@ -28,15 +30,34 @@ export class AuthService {
     localStorage.removeItem('accessToken');
   }
 
-  saveToken(token: string) {
-    localStorage.setItem('accessToken', token);
+  saveToken(accessToken: string, refreshToken: string) {
+  localStorage.setItem('accessToken', accessToken);
+  localStorage.setItem('refreshToken', refreshToken);
+}
+
+   setTokens(access: string, refresh: string) {
+     localStorage.setItem(this.accessTokenKey, access);
+     localStorage.setItem(this.refreshTokenKey, refresh);
   }
 
   getToken(): string | null {
     return localStorage.getItem('accessToken');
   }
 
+    getAccessToken(): string | null {
+      return localStorage.getItem(this.accessTokenKey);
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem(this.refreshTokenKey);
+  }
+    
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return !!this.getAccessToken();
+  }
+
+  clear() {
+     localStorage.removeItem('accessToken');
+     localStorage.removeItem('refreshToken');
   }
 }

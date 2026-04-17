@@ -28,8 +28,8 @@ export class LoginComponent {
     this.auth.login(this.form).subscribe({
       next: (res) => {
         console.log("Login Response:", res);
-        this.auth.saveToken(res.token);
-        const payload = this.parseJwt(res.token);
+        this.auth.saveToken(res.accessToken, res.refreshToken);
+        const payload = this.parseJwt(res.accessToken);
         const username = payload.sub;
         localStorage.setItem('username', username);
         this.router.navigate(['/dashboard']);

@@ -38,9 +38,9 @@ public class AuthenticationService {
     private String activationUrl;
 
     public void register(RegistrationRequest request) throws MessagingException {
-        var userRole = roleRepository.findByName("USER")
+        var userRole = roleRepository.findByName("ROLE_CUSTOMER")
                 // todo - better exception handling
-                .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
+                .orElseThrow(() -> new IllegalStateException("ROLE CUSTOMER was not initiated"));
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
