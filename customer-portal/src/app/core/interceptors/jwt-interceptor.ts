@@ -58,7 +58,7 @@ export class jwtInterceptor implements HttpInterceptor {
 
     const refreshToken = this.authService.getRefreshToken();
 
-    return this.http.post<any>('http://localhost:8088/api/v1/auth/refresh', {
+    return this.http.post<any>('http://localhost:9090/api/v1/auth/refresh', {
       refreshToken: refreshToken
     }).pipe(
       switchMap(response => {

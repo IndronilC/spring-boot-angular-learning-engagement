@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    this.http.get('http://localhost:8080/api/users/profile', {
+    this.http.get('http://localhost:9090/api/v1/users/profile', {
       headers: {
         Authorization: 'Bearer ' + token
       }
