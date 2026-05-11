@@ -26,7 +26,6 @@ import static jakarta.persistence.FetchType.EAGER;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Entity
 @Table(name = "_user")
 @EntityListeners(AuditingEntityListener.class)

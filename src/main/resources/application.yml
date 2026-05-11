@@ -12,3 +12,9 @@ server:
 logging:
   level:
     org.springframework.security: DEBUG
+    org:
+      hibernate:
+        SQL: DEBUG
+        orm:
+          jdbc:
+            bind: TRACE
