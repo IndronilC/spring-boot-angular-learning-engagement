@@ -1,0 +1,40 @@
+<div class="auth-container">
+
+  <div class="auth-card">
+
+    <h2 class="auth-title">Customer Login</h2>
+
+    <form (ngSubmit)="onSubmit()" class="auth-form">
+
+      <input
+        [(ngModel)]="form.email"
+        name="email"
+        type="email"
+        placeholder="Email"
+        required
+        class="auth-input"
+      />
+
+      <input
+        [(ngModel)]="form.password"
+        name="password"
+        type="password"
+        placeholder="Password"
+        required
+        class="auth-input"
+      />
+
+      <button type="submit" class="auth-button login-btn">
+        Login
+      </button>
+
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account?
+      <a routerLink="/register" class="auth-link">Register</a>
+    </p>
+
+  </div>
+
+</div>

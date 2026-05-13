@@ -1,0 +1,60 @@
+<div class="dashboard-container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h2>
+      Welcome, {{ profileData?.fullName || profileData?.email }} 👋
+    </h2>
+  </div>
+
+  <!-- CARDS -->
+  <div class="card-grid">
+
+    <!-- PROFILE CARD -->
+    <div class="card profile-card">
+
+      <div>
+        <h3>Profile</h3>
+        <p class="sub-text">View your profile details</p>
+
+        <div *ngIf="profileData as p; else noData" class="profile-info">
+          <p><strong>Full Name:</strong> {{ p.fullName }}</p>
+          <p><strong>Email:</strong> {{ p.email }}</p>
+          <p><strong>Role:</strong> {{ p.role }}</p>
+          <p><strong>First Name:</strong> {{ p.firstName }}</p>
+          <p><strong>Last Name:</strong> {{ p.lastName }}</p>
+        </div>
+
+        <ng-template #noData>
+          <p class="sub-text">No profile loaded yet.</p>
+        </ng-template>
+      </div>
+
+      <button (click)="getProfile()" class="primary-btn">
+        Get Profile
+      </button>
+
+    </div>
+
+    <!-- PAYMENTS -->
+    <div class="card">
+      <h3>Payments</h3>
+      <p class="sub-text">Coming soon</p>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="card">
+      <h3>Settings</h3>
+      <p class="sub-text">Manage preferences</p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <button class="logout-btn" (click)="logout()">
+      Logout
+    </button>
+  </div>
+
+</div>

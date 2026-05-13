@@ -1,0 +1,28 @@
+<div class="activate-container">
+
+  <div class="activate-card">
+
+    <h2 class="activate-title">Account Activation</h2>
+
+    <p 
+      class="activate-message"
+      [ngClass]="{
+        'text-green-600': isSuccess,
+      'text-red-600': isError
+    }"
+    >
+      {{ message || 'Activating your account...' }}
+    </p>
+
+    <!-- ✅ Show login button ONLY on success -->
+    <button 
+      *ngIf="true"
+      class="login-btn"
+      (click)="goToLogin()"
+    >
+      Go to Login
+    </button>
+
+  </div>
+
+</div>

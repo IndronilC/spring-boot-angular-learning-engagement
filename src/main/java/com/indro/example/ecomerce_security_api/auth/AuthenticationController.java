@@ -1,5 +1,6 @@
 package com.indro.example.ecomerce_security_api.auth;
 
+import com.indro.example.ecomerce_security_api.user.TokenPair;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.mail.*;
@@ -9,8 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication")
 public class AuthenticationController {
@@ -24,7 +27,11 @@ public class AuthenticationController {
             @RequestBody @Valid RegistrationRequest request
     ) throws MessagingException {
         service.register(request);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.ok()
+                .body(Map.of(
+                        "status", "SUCCESS",
+                        "message", "Registration successful"
+                ));
     }
 
     @PostMapping("/authenticate")
@@ -40,5 +47,21 @@ public class AuthenticationController {
         service.activateAccount(token);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthenticationResponse> refresh(
+            @RequestBody RefreshTokenRequest request
+    ) {
+            TokenPair tokenPair = service.refresh(request);
 
-}
+            AuthenticationResponse response = AuthenticationResponse.builder()
+                    .accessToken(tokenPair.getAccessToken())
+                    .refreshToken(tokenPair.getRefreshToken())
+                    .build();
+
+            return ResponseEntity.ok(response);
+        }
+    }
+
+
+
+

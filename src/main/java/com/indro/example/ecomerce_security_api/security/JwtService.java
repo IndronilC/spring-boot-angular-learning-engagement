@@ -2,6 +2,7 @@ package com.indro.example.ecomerce_security_api.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,7 +59,8 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .claim("authorities", authorities)
-                .signWith(getSignInKey())
+           // To ensure that token can be read by user -service as it stands separate
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -84,8 +86,20 @@ public class JwtService {
                 .getBody();
     }
 
+    private byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) (
+                    (Character.digit(s.charAt(i), 16) << 4)
+                            + Character.digit(s.charAt(i+1), 16)
+            );
+        }
+        return data;
+    }
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = hexStringToByteArray(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

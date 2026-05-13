@@ -4,10 +4,7 @@ import com.indro.example.ecomerce_security_api.email.EmailService;
 import com.indro.example.ecomerce_security_api.email.EmailTemplateName;
 import com.indro.example.ecomerce_security_api.role.RoleRepository;
 import com.indro.example.ecomerce_security_api.security.JwtService;
-import com.indro.example.ecomerce_security_api.user.Token;
-import com.indro.example.ecomerce_security_api.user.TokenRepository;
-import com.indro.example.ecomerce_security_api.user.User;
-import com.indro.example.ecomerce_security_api.user.UserRepository;
+import com.indro.example.ecomerce_security_api.user.*;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,13 +32,15 @@ public class AuthenticationService {
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
 
+    private final RefreshTokenService refreshTokenService;
+
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
     public void register(RegistrationRequest request) throws MessagingException {
-        var userRole = roleRepository.findByName("USER")
+        var userRole = roleRepository.findByName("ROLE_CUSTOMER")
                 // todo - better exception handling
-                .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
+                .orElseThrow(() -> new IllegalStateException("ROLE CUSTOMER was not initiated"));
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -67,9 +66,15 @@ public class AuthenticationService {
         var user = ((User) auth.getPrincipal());
         claims.put("fullName", user.getFullName());
 
-        var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
+        // 🔐 Access Token
+        var accessToken = jwtService.generateToken(claims, user);
+
+        // 🔁 Refresh Token (NEW)
+        var refreshToken = refreshTokenService.createRefreshToken(user);
+
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getToken())
                 .build();
     }
 
@@ -110,11 +115,13 @@ public class AuthenticationService {
     private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
 
+        String activationLink = activationUrl + "?token=" + newToken;
+
         emailService.sendEmail(
                 user.getEmail(),
                 user.getFullName(),
                 EmailTemplateName.ACTIVATE_ACCOUNT,
-                activationUrl,
+                activationLink,
                 newToken,
                 "Account activation"
                 );
@@ -132,5 +139,9 @@ public class AuthenticationService {
         }
 
         return codeBuilder.toString();
+    }
+
+    public TokenPair refresh(RefreshTokenRequest request) {
+        return refreshTokenService.generateNewAccessToken(request.getRefreshToken());
     }
 }
