@@ -5,6 +5,8 @@ import com.indro.example.ecomerce_security_api.email.EmailTemplateName;
 import com.indro.example.ecomerce_security_api.role.RoleRepository;
 import com.indro.example.ecomerce_security_api.security.JwtService;
 import com.indro.example.ecomerce_security_api.user.*;
+import com.indro.example.ecomerce_security_api.user.event.UserCreatedEvent;
+import com.indro.example.ecomerce_security_api.user.event.producer.UserEventProducer;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,9 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,7 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
 
     private final RefreshTokenService refreshTokenService;
+    private final UserEventProducer userEventProducer;
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
@@ -50,7 +55,26 @@ public class AuthenticationService {
                 .enabled(false)
                 .roles(List.of(userRole))
                 .build();
-        userRepository.save(user);
+        User savedUser = null;
+        savedUser = userRepository.save(user);
+
+        UserCreatedEvent event =
+                UserCreatedEvent.builder()
+                        .eventId(UUID.randomUUID().toString())
+                        .eventType("USER_CREATED")
+                        .version("v1")
+                        .createdAt(Instant.now())
+                        .userId(String.valueOf(savedUser.getId()))
+                        .email(savedUser.getEmail())
+                        .roles(
+                                savedUser.getAuthorities()
+                                        .stream()
+                                        .map(authority -> authority.getAuthority())
+                                        .toList()
+                        )
+                        .build();
+        userEventProducer.publishUserCreatedEvent(event);
+        // send activation code through mail.
         sendValidationEmail(user);
     }
 

@@ -37,6 +37,12 @@ spring:
 #      expiration: 86400000 # a day
 #      refresh-token:
 #        expiration: 604800000 # 7 days
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 application:
   security:
     jwt:
@@ -52,3 +58,4 @@ application:
       photos-output-path: ./uploads
 server:
   port: 8081
+
